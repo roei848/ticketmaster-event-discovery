@@ -1,7 +1,11 @@
 import { useState } from 'react';
-import SearchBar from './components/SearchBar';
-import EventGrid from './components/EventGrid';
-import EventDetailModal from './components/EventDetailModal';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme, darkTheme } from './theme/theme';
+import { GlobalStyles } from './theme/GlobalStyles';
+import SearchBarStyled from './components/organisms/SearchBarStyled';
+import EventGridStyled from './components/organisms/EventGridStyled';
+import EventDetailModalStyled from './components/organisms/EventDetailModalStyled';
+import { ThemeToggle } from './components/ThemeToggle';
 import { cities } from './data/cities';
 import { searchEvents } from './services/api';
 import type { Event, City } from './types';
@@ -13,6 +17,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   const handleSearch = async (city: City, radius: number, eventTypes: string[], startDate?: string, endDate?: string) => {
     try {
@@ -40,29 +45,34 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Ticketmaster Event Discovery</h1>
-        <p>Find events near you worldwide</p>
-      </header>
+    <ThemeProvider theme={isDarkTheme ? darkTheme : lightTheme}>
+      <GlobalStyles />
+      <div className="app">
+        <ThemeToggle isDark={isDarkTheme} onToggle={() => setIsDarkTheme(!isDarkTheme)} />
 
-      <main className="app-main">
-        <SearchBar cities={cities} onSearch={handleSearch} />
+        <header className="app-header">
+          <h1>Ticketmaster Event Discovery</h1>
+          <p>Find events near you worldwide</p>
+        </header>
 
-        {loading && <div className="loading">Searching for events...</div>}
+        <main className="app-main">
+          <SearchBarStyled cities={cities} onSearch={handleSearch} />
 
-        {error && <div className="error">{error}</div>}
+          {loading && <div className="loading">Searching for events...</div>}
 
-        {!loading && hasSearched && <EventGrid events={events} onEventClick={setSelectedEvent} />}
-      </main>
+          {error && <div className="error">{error}</div>}
 
-      {selectedEvent && (
-        <EventDetailModal
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-        />
-      )}
-    </div>
+          {!loading && hasSearched && <EventGridStyled events={events} onEventClick={setSelectedEvent} />}
+        </main>
+
+        {selectedEvent && (
+          <EventDetailModalStyled
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+          />
+        )}
+      </div>
+    </ThemeProvider>
   );
 }
 
