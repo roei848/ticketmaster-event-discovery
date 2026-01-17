@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import { Calendar } from 'lucide-react';
 import { Label } from '../atoms/Label';
@@ -28,6 +28,7 @@ const InputWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const IconWrapper = styled.div`
@@ -59,15 +60,27 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   onStartDateChange,
   onEndDateChange
 }) => {
+  const startDateInputRef = useRef<HTMLInputElement>(null);
+  const endDateInputRef = useRef<HTMLInputElement>(null);
+
+  const handleStartWrapperClick = () => {
+    startDateInputRef.current?.showPicker();
+  };
+
+  const handleEndWrapperClick = () => {
+    endDateInputRef.current?.showPicker();
+  };
+
   return (
     <Container>
       <DateField>
         <Label>Start Date</Label>
-        <InputWrapper>
+        <InputWrapper onClick={handleStartWrapperClick}>
           <IconWrapper>
             <Calendar size={20} />
           </IconWrapper>
           <StyledDateInput
+            ref={startDateInputRef}
             type="date"
             value={startDate}
             onChange={(e) => onStartDateChange(e.target.value)}
@@ -76,13 +89,15 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
       </DateField>
       <DateField>
         <Label>End Date</Label>
-        <InputWrapper>
+        <InputWrapper onClick={handleEndWrapperClick}>
           <IconWrapper>
             <Calendar size={20} />
           </IconWrapper>
           <StyledDateInput
+            ref={endDateInputRef}
             type="date"
             value={endDate}
+            min={startDate || undefined}
             onChange={(e) => onEndDateChange(e.target.value)}
           />
         </InputWrapper>
