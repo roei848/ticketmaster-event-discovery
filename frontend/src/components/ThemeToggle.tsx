@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Sun, Moon } from 'lucide-react';
 import { Button } from './atoms/Button';
 
 interface ThemeToggleProps {
@@ -17,8 +18,13 @@ const ToggleContainer = styled.div`
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ isDark, onToggle }) => {
   return (
     <ToggleContainer>
-      <Button variant="secondary" size="sm" onClick={onToggle}>
-        {isDark ? '☀️ Light' : '🌙 Dark'}
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={onToggle}
+        icon={isDark ? <Sun size={18} /> : <Moon size={18} />}
+      >
+        {isDark ? 'Light' : 'Dark'}
       </Button>
     </ToggleContainer>
   );

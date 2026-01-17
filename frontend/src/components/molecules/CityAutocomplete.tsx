@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
+import { MapPin } from 'lucide-react';
 import { Label } from '../atoms/Label';
 import { Input } from '../atoms/Input';
 
@@ -28,6 +29,25 @@ const FieldContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${props => props.theme.spacing.xs};
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  left: ${props => props.theme.spacing.md};
+  color: ${props => props.theme.colors.textSecondary};
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+`;
+
+const StyledInput = styled(Input)`
+  padding-left: calc(${props => props.theme.spacing.md} * 2 + 20px);
 `;
 
 const SuggestionsList = styled.ul`
@@ -88,16 +108,21 @@ export const CityAutocomplete: React.FC<CityAutocompleteProps> = ({
     <Container>
       <FieldContainer>
         <Label>City</Label>
-        <Input
-          value={value}
-          onChange={(e) => {
-            onCityChange(e.target.value);
-            setShowSuggestions(true);
-          }}
-          onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          placeholder="Enter city name..."
-        />
+        <InputWrapper>
+          <IconWrapper>
+            <MapPin size={20} />
+          </IconWrapper>
+          <StyledInput
+            value={value}
+            onChange={(e) => {
+              onCityChange(e.target.value);
+              setShowSuggestions(true);
+            }}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+            placeholder="Enter city name..."
+          />
+        </InputWrapper>
       </FieldContainer>
       {showSuggestions && filteredCities.length > 0 && (
         <SuggestionsList>

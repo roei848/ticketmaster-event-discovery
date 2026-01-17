@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { Search } from 'lucide-react';
 import type { City } from '../../types';
 import { CityAutocomplete } from '../molecules/CityAutocomplete';
 import { RadiusSelector } from '../molecules/RadiusSelector';
@@ -24,8 +25,21 @@ const SearchBarContainer = styled.div`
   background: ${props => props.theme.colors.surface};
   border-radius: ${props => props.theme.borderRadius.lg};
   padding: ${props => props.theme.spacing.xl};
-  box-shadow: ${props => props.theme.shadows.md};
+  box-shadow: ${props => props.theme.shadows.lg};
   margin-bottom: ${props => props.theme.spacing.xl};
+  border: 1px solid ${props => props.theme.colors.border};
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, ${props => props.theme.colors.primary}, ${props => props.theme.colors.primaryHover});
+    border-radius: ${props => props.theme.borderRadius.lg} ${props => props.theme.borderRadius.lg} 0 0;
+  }
 `;
 
 const SearchRow = styled.div`
@@ -72,6 +86,7 @@ const SearchBarStyled = ({ cities, onSearch }: SearchBarStyledProps) => {
       lon: localCity.longitude
     };
     setSelectedCity(city);
+    setCityInput(localCity.name); // Fix: Update input to show selected city name
   };
 
   const handleSearch = () => {
@@ -106,7 +121,7 @@ const SearchBarStyled = ({ cities, onSearch }: SearchBarStyledProps) => {
           onEndDateChange={setEndDate}
         />
 
-        <Button onClick={handleSearch} variant="primary">
+        <Button onClick={handleSearch} variant="primary" icon={<Search size={20} />}>
           Search
         </Button>
       </SearchRow>
