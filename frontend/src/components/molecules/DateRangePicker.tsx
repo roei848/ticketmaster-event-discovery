@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Calendar } from 'lucide-react';
 import { Label } from '../atoms/Label';
 import { Input } from '../atoms/Input';
 
@@ -23,6 +24,35 @@ const DateField = styled.div`
   min-width: 150px;
 `;
 
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const IconWrapper = styled.div`
+  position: absolute;
+  left: ${props => props.theme.spacing.md};
+  color: ${props => props.theme.colors.textSecondary};
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+`;
+
+const StyledDateInput = styled(Input)`
+  padding-left: calc(${props => props.theme.spacing.md} * 2 + 20px);
+
+  /* Hide native calendar icon */
+  &::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    right: ${props => props.theme.spacing.md};
+    width: 20px;
+    height: 20px;
+  }
+`;
+
 export const DateRangePicker: React.FC<DateRangePickerProps> = ({
   startDate,
   endDate,
@@ -33,19 +63,29 @@ export const DateRangePicker: React.FC<DateRangePickerProps> = ({
     <Container>
       <DateField>
         <Label>Start Date</Label>
-        <Input
-          type="date"
-          value={startDate}
-          onChange={(e) => onStartDateChange(e.target.value)}
-        />
+        <InputWrapper>
+          <IconWrapper>
+            <Calendar size={20} />
+          </IconWrapper>
+          <StyledDateInput
+            type="date"
+            value={startDate}
+            onChange={(e) => onStartDateChange(e.target.value)}
+          />
+        </InputWrapper>
       </DateField>
       <DateField>
         <Label>End Date</Label>
-        <Input
-          type="date"
-          value={endDate}
-          onChange={(e) => onEndDateChange(e.target.value)}
-        />
+        <InputWrapper>
+          <IconWrapper>
+            <Calendar size={20} />
+          </IconWrapper>
+          <StyledDateInput
+            type="date"
+            value={endDate}
+            onChange={(e) => onEndDateChange(e.target.value)}
+          />
+        </InputWrapper>
       </DateField>
     </Container>
   );
