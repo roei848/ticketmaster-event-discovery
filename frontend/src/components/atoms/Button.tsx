@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -45,6 +46,11 @@ const StyledButton = styled.button<ButtonProps>`
     box-shadow: ${props => props.theme.shadows.md};
   }
 
+  &:focus-visible {
+    outline: 2px solid ${props => props.theme.colors.primary};
+    outline-offset: 2px;
+  }
+
   &:active:not(:disabled) {
     transform: translateY(0);
   }
@@ -57,6 +63,12 @@ const StyledButton = styled.button<ButtonProps>`
   ${props => props.$customStyles}
 `;
 
+/**
+ * Button component with theme support
+ * @param variant - Button style variant (primary or secondary)
+ * @param size - Button size (sm, md, or lg)
+ * @param $customStyles - Custom CSS styles to apply
+ */
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
