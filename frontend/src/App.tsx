@@ -9,7 +9,6 @@ import { ThemeToggle } from './components/ThemeToggle';
 import { cities } from './data/cities';
 import { searchEvents } from './services/api';
 import type { Event, City } from './types';
-import './App.css';
 
 function App() {
   const [events, setEvents] = useState<Event[]>([]);
