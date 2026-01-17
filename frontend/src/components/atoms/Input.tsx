@@ -26,7 +26,7 @@ const StyledInput = styled.input<InputProps>`
     border-color: ${props => props.hasError ? props.theme.colors.error : props.theme.colors.borderHover};
   }
 
-  &:focus {
+  &:focus-visible {
     outline: none;
     border-color: ${props => props.hasError ? props.theme.colors.error : props.theme.colors.primary};
     box-shadow: 0 0 0 3px ${props => {
