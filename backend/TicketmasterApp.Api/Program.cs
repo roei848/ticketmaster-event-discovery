@@ -1,3 +1,5 @@
+using TicketmasterApp.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services
@@ -6,6 +8,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
+
+// Register services
+builder.Services.AddScoped<ITicketmasterService, TicketmasterService>();
 
 // Add CORS for frontend
 builder.Services.AddCors(options =>
