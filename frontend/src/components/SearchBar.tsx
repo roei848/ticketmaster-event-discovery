@@ -4,12 +4,12 @@ import './SearchBar.css';
 
 interface SearchBarProps {
   cities: City[];
-  onSearch: (city: City, radius: number, eventTypes: string[]) => void;
+  onSearch: (city: City, radius: number, eventTypes: string[], startDate?: string, endDate?: string) => void;
 }
 
 const EVENT_CATEGORIES = ['Music', 'Sports', 'Arts & Theatre', 'Family'];
 
-const RADIUS_OPTIONS = [5, 10, 25, 50, 100];
+const RADIUS_OPTIONS = [10, 25, 50, 100, 200]; // kilometers
 
 export default function SearchBar({ cities, onSearch }: SearchBarProps) {
   const [cityInput, setCityInput] = useState('');
@@ -17,6 +17,8 @@ export default function SearchBar({ cities, onSearch }: SearchBarProps) {
   const [radius, setRadius] = useState(25);
   const [selectedEventTypes, setSelectedEventTypes] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const filteredCities = useMemo(() => {
     if (!cityInput) return [];
@@ -49,7 +51,7 @@ export default function SearchBar({ cities, onSearch }: SearchBarProps) {
       return;
     }
 
-    onSearch(selectedCity, radius, selectedEventTypes);
+    onSearch(selectedCity, radius, selectedEventTypes, startDate, endDate);
   };
 
   return (
@@ -92,9 +94,29 @@ export default function SearchBar({ cities, onSearch }: SearchBarProps) {
             className="radius-select"
           >
             {RADIUS_OPTIONS.map(r => (
-              <option key={r} value={r}>{r} miles</option>
+              <option key={r} value={r}>{r} km</option>
             ))}
           </select>
+        </div>
+
+        <div className="date-container">
+          <label>Start Date:</label>
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="date-input"
+          />
+        </div>
+
+        <div className="date-container">
+          <label>End Date:</label>
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="date-input"
+          />
         </div>
 
         <button onClick={handleSearch} className="search-button">

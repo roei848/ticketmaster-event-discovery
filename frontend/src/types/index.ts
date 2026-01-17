@@ -38,4 +38,6 @@ export interface SearchParams {
   latitude: number;
   longitude: number;
   eventTypes: string[];
+  startDate?: string;
+  endDate?: string;
 }

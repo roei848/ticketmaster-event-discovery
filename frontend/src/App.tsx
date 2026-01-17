@@ -14,7 +14,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const handleSearch = async (city: City, radius: number, eventTypes: string[]) => {
+  const handleSearch = async (city: City, radius: number, eventTypes: string[], startDate?: string, endDate?: string) => {
     try {
       setLoading(true);
       setError(null);
@@ -25,7 +25,9 @@ function App() {
         radius,
         latitude: city.lat,
         longitude: city.lon,
-        eventTypes
+        eventTypes,
+        startDate,
+        endDate
       });
 
       setEvents(results);

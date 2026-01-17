@@ -21,12 +21,18 @@ public class CacheService : ICacheService
         _cache.Set(key, value, expiration);
     }
 
-    public string GenerateSearchKey(string city, int radius, List<string> eventTypes)
+    public string GenerateSearchKey(string city, int radius, List<string> eventTypes, string? startDate = null, string? endDate = null)
     {
         var eventTypesString = eventTypes.Any()
             ? string.Join("-", eventTypes.OrderBy(t => t))
             : "all";
 
-        return $"events_{city.ToLower()}_{radius}_{eventTypesString}";
+        var dateString = string.Empty;
+        if (!string.IsNullOrEmpty(startDate) || !string.IsNullOrEmpty(endDate))
+        {
+            dateString = $"_{startDate ?? "any"}_{endDate ?? "any"}";
+        }
+
+        return $"events_{city.ToLower()}_{radius}_{eventTypesString}{dateString}";
     }
 }

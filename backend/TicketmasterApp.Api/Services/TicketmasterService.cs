@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using TicketmasterApp.Api.Models;
 
 namespace TicketmasterApp.Api.Services;
@@ -25,14 +26,24 @@ public class TicketmasterService : ITicketmasterService
         var baseUrl = _configuration["Ticketmaster:BaseUrl"];
 
         var geoPoint = $"{request.Latitude},{request.Longitude}";
-        var radiusInMiles = $"{request.Radius}miles";
+        var radius = request.Radius;
 
-        var url = $"{baseUrl}events.json?apikey={apiKey}&geoPoint={geoPoint}&radius={radiusInMiles}&size=50";
+        var url = $"{baseUrl}events.json?apikey={apiKey}&geoPoint={geoPoint}&radius={radius}&size=50&unit=miles";
 
         if (request.EventTypes.Any())
         {
             var classificationName = string.Join(",", request.EventTypes);
             url += $"&classificationName={classificationName}";
+        }
+
+        if (!string.IsNullOrEmpty(request.StartDate))
+        {
+            url += $"&startDateTime={request.StartDate}T00:00:00Z";
+        }
+
+        if (!string.IsNullOrEmpty(request.EndDate))
+        {
+            url += $"&endDateTime={request.EndDate}T23:59:59Z";
         }
 
         try
@@ -41,7 +52,13 @@ public class TicketmasterService : ITicketmasterService
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var ticketmasterResponse = JsonSerializer.Deserialize<TicketmasterEventsResponse>(content);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip
+            };
+            var ticketmasterResponse = JsonSerializer.Deserialize<TicketmasterEventsResponse>(content, options);
 
             return MapToEvents(ticketmasterResponse);
         }
@@ -65,7 +82,13 @@ public class TicketmasterService : ITicketmasterService
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
-            var ticketmasterEvent = JsonSerializer.Deserialize<TicketmasterEventResponse>(content);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Skip
+            };
+            var ticketmasterEvent = JsonSerializer.Deserialize<TicketmasterEventResponse>(content, options);
 
             return MapToEventDetail(ticketmasterEvent);
         }
@@ -120,8 +143,8 @@ public class TicketmasterService : ITicketmasterService
             TicketmasterUrl = response.url ?? string.Empty,
             Description = response.info ?? response.pleaseNote,
             VenueAddress = venue?.address?.line1 ?? string.Empty,
-            Latitude = venue?.location?.latitude ?? 0,
-            Longitude = venue?.location?.longitude ?? 0,
+            Latitude = double.TryParse(venue?.location?.latitude, out var lat) ? lat : 0,
+            Longitude = double.TryParse(venue?.location?.longitude, out var lon) ? lon : 0,
             Promoter = response.promoter?.name,
             PriceRange = response.priceRanges?.FirstOrDefault() != null ? new PriceRange
             {
@@ -237,7 +260,7 @@ public class TicketmasterService : ITicketmasterService
 
     private class LocationDto
     {
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public string? latitude { get; set; }
+        public string? longitude { get; set; }
     }
 }

@@ -31,13 +31,15 @@ public class EventsController : ControllerBase
         [FromQuery] int radius,
         [FromQuery] double latitude,
         [FromQuery] double longitude,
-        [FromQuery] List<string>? eventTypes = null)
+        [FromQuery] List<string>? eventTypes = null,
+        [FromQuery] string? startDate = null,
+        [FromQuery] string? endDate = null)
     {
         if (string.IsNullOrWhiteSpace(city))
             return BadRequest("City is required");
 
-        if (radius < 5 || radius > 100)
-            return BadRequest("Radius must be between 5 and 100 miles");
+        if (radius < 5 || radius > 200)
+            return BadRequest("Radius must be between 5 and 200 miles");
 
         var searchRequest = new SearchRequest
         {
@@ -45,11 +47,13 @@ public class EventsController : ControllerBase
             Radius = radius,
             Latitude = latitude,
             Longitude = longitude,
-            EventTypes = eventTypes ?? new List<string>()
+            EventTypes = eventTypes ?? new List<string>(),
+            StartDate = startDate,
+            EndDate = endDate
         };
 
         // Check cache
-        var cacheKey = _cacheService.GenerateSearchKey(city, radius, searchRequest.EventTypes);
+        var cacheKey = _cacheService.GenerateSearchKey(city, radius, searchRequest.EventTypes, startDate, endDate);
         var cachedEvents = _cacheService.Get<List<Event>>(cacheKey);
 
         if (cachedEvents != null)
