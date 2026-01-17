@@ -11,6 +11,7 @@ builder.Services.AddHttpClient();
 
 // Register services
 builder.Services.AddScoped<ITicketmasterService, TicketmasterService>();
+builder.Services.AddSingleton<ICacheService, CacheService>();
 
 // Add CORS for frontend
 builder.Services.AddCors(options =>
