@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 from datetime import datetime
 
 PORT = 8080
+DEFAULT_PROGRESS_FILE = 'progress.json'
 
 class KanbanRequestHandler(http.server.SimpleHTTPRequestHandler):
 
@@ -47,9 +48,19 @@ class KanbanRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def load_progress_json(self):
         """Load and return progress.json data"""
-        progress_file = Path('.worktrees/initial-implementation/progress.json')
+        # Try multiple locations: root, then worktrees
+        possible_paths = [
+            Path('progress.json'),
+            Path('.worktrees/frontend-refactor-styled-components/progress.json')
+        ]
 
-        if not progress_file.exists():
+        progress_file = None
+        for path in possible_paths:
+            if path.exists():
+                progress_file = path
+                break
+
+        if not progress_file:
             return {
                 'error': 'progress.json not found',
                 'lastUpdated': datetime.now().isoformat(),
@@ -147,7 +158,7 @@ if __name__ == '__main__':
         print(f"")
         print(f"📊 Kanban Board: http://localhost:{PORT}/kanban.html")
         print(f"🔌 API Endpoint:  http://localhost:{PORT}/api/progress")
-        print(f"📝 Data Source:   .worktrees/initial-implementation/progress.json")
+        print(f"📝 Data Source:   Auto-detect (progress.json or worktree)")
         print(f"🔄 Refresh Rate:  15 seconds")
         print(f"")
         print(f"Press Ctrl+C to stop the server")
