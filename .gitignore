@@ -1,1 +1,10 @@
 .worktrees/
+
+# Environment files
+.env
+*.env.local
+
+# .NET
+bin/
+obj/
+*.user

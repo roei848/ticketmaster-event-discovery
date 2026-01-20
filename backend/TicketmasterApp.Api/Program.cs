@@ -1,6 +1,13 @@
+using DotNetEnv;
 using TicketmasterApp.Api.Services;
 
+// Load .env file if it exists
+Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add environment variables to configuration
+builder.Configuration.AddEnvironmentVariables();
 
 // Add services
 builder.Services.AddControllers();
