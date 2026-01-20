@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import styled from 'styled-components';
 import { Search } from 'lucide-react';
+import styled from 'styled-components';
 import type { City } from '../../types';
-import { CityAutocomplete } from '../molecules/CityAutocomplete';
-import { RadiusSelector } from '../molecules/RadiusSelector';
-import { DateRangePicker } from '../molecules/DateRangePicker';
-import { EventTypeFilter } from '../molecules/EventTypeFilter';
 import { Button } from '../atoms/Button';
+import { RadiusSelector } from '../molecules/RadiusSelector';
+import { EventTypeFilter } from '../molecules/EventTypeFilter';
+import { CityAutocomplete } from '../molecules/CityAutocomplete';
+import { DatePickerContainer } from '../molecules/DatePickerContainer';
 
 interface SearchBarStyledProps {
   cities: City[];
@@ -114,7 +114,7 @@ const SearchBarStyled = ({ cities, onSearch }: SearchBarStyledProps) => {
           onChange={setRadius}
         />
 
-        <DateRangePicker
+        <DatePickerContainer
           startDate={startDate}
           endDate={endDate}
           onStartDateChange={setStartDate}

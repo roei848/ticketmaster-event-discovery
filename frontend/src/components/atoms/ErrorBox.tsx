@@ -12,16 +12,10 @@ const ErrorContainer = styled.div`
   gap: ${props => props.theme.spacing.md};
   padding: ${props => props.theme.spacing.lg};
   margin: ${props => props.theme.spacing.lg} 0;
-  background: ${props => props.theme.mode === 'dark'
-    ? 'rgba(239, 68, 68, 0.1)'
-    : 'rgba(239, 68, 68, 0.05)'};
-  border: 1px solid ${props => props.theme.mode === 'dark'
-    ? 'rgba(239, 68, 68, 0.3)'
-    : 'rgba(239, 68, 68, 0.2)'};
+  background: rgba(211, 47, 47, 0.08);
+  border: 1px solid rgba(211, 47, 47, 0.25);
   border-radius: ${props => props.theme.borderRadius.md};
-  color: ${props => props.theme.mode === 'dark'
-    ? '#fca5a5'
-    : '#dc2626'};
+  color: ${props => props.theme.colors.error};
 `;
 
 const IconWrapper = styled.div`
